@@ -25,13 +25,12 @@
             <div id="menuDropdown" class="hidden absolute right-0 mt-2 w-64 bg-slate-700 rounded-lg shadow-xl overflow-hidden z-50">
                 <button id="menuAleatorio" class="w-full text-left px-4 py-3 hover:bg-slate-600">🎲 Gerar Ficha Aleatória</button>
                 <button id="menuManual" class="w-full text-left px-4 py-3 hover:bg-slate-600">⚔️ Gerar Ficha Manual</button>
-                
                 <button id="menuPirata" class="w-full text-left px-4 py-3 hover:bg-slate-600 text-cyan-400 font-semibold">
                     🏴‍☠️ Forjar Ficha Pirata
                 </button>
 
                 <hr class="border-slate-500">
-                <button id="menuLogin" class="w-full text-left px-4 py-3 hover:bg-slate-600">👤 Login</button>
+                <a href="login.html" id="menuLogin" class="block w-full text-left px-4 py-3 hover:bg-slate-600">👤 Login</a>
             </div>
         </div>
     </header>
@@ -135,5 +134,21 @@
     </main>
 
     <script src="script.js?v=20260704"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnLogin = document.getElementById('menuLogin');
+            const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || 'null');
+
+            if (btnLogin && usuarioSalvo && usuarioSalvo.nome) {
+                btnLogin.textContent = `Sair (${usuarioSalvo.nome})`;
+                btnLogin.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('usuario');
+                    window.location.reload();
+                });
+            }
+        });
+    </script>
 </body>
 </html>
