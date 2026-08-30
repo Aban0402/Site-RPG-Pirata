@@ -14,10 +14,8 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static('.'));
 
-// Banco de dados simulado na memória do servidor
 let bancoFichasRPG = [];
 
-// Rota de verificação do servidor
 app.get('/api/health', (req, res) => {
     res.json({
         status: "Servidor RPG Forge está online!",
@@ -25,12 +23,10 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Rota para listar todas as fichas salvas
 app.get('/api/fichas', (req, res) => {
     res.json(bancoFichasRPG);
 });
 
-// ROTA POST: Recebe qualquer tipo de ficha (Medieval ou Pirata)
 app.post('/api/fichas', (req, res) => {
     const dadosPersonagem = req.body;
 
