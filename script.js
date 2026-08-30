@@ -385,33 +385,73 @@ if (btnPNGMedieval && btnPNGMedieval.addEventListener) {
 if (typeof window !== 'undefined' && window.addEventListener) {
     window.addEventListener('DOMContentLoaded', () => {
         const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
+
+if (fichaSalvaStr) {
+    try {
+        const fichaSalva = JSON.parse(fichaSalvaStr);
+        localStorage.removeItem('fichaSelecionada');
         
-        if (fichaSalvaStr) {
-            try {
-                const fichaSalva = JSON.parse(fichaSalvaStr);
-                
-                localStorage.removeItem('fichaSelecionada');
-                
-                dadosTemporariosForm = {
-                    nome: fichaSalva.nome,
-                    raca: fichaSalva.raca,
-                    classe: fichaSalva.classe,
-                    tipoDado: 'd20'
-                };
-                
-                atributosRolados = fichaSalva.atributos || {};
-                
-                renderizarFicha({
-                    nome: fichaSalva.nome,
-                    raca: fichaSalva.raca,
-                    classe: fichaSalva.classe,
-                    atributos: fichaSalva.atributos
-                });
-                
-            } catch (e) {
-                console.error("Erro ao carregar ficha salva:", e);
+        // Verifica se a ficha salva pertence ao sistema Pirata
+        if (fichaSalva.sistema === 'Pirata') {
+            // Se você tiver uma página específica para o pirata, redireciona passando os dados ou ID
+            // Ou se renderiza na mesma estrutura, normaliza as chaves piratas:
+            const atributosBrutos = fichaSalva.atributos || {};
+            const atributosPirataNormalizados = {
+                forca: atributosBrutos.forca || 7,
+                destreza: atributosBrutos.destreza || 7,
+                constituicao: atributosBrutos.constituicao || 7,
+                sorte: atributosBrutos.sorte || 7,
+                carisma: atributosBrutos.carisma || 7
+            };
+
+            // Atribui ao contexto atual do pirata
+            atributosRolados = atributosPirataNormalizados;
+            personagemAtualPirata = {
+                nome: fichaSalva.nome,
+                raca: fichaSalva.raca,
+                classe: fichaSalva.classe,
+                atributos: atributosPirataNormalizados
+            };
+
+            if (typeof renderizarFichaPirata === 'function') {
+                renderizarFichaPirata(personagemAtualPirata);
             }
+            return;
         }
+
+        // Caso seja a ficha Medieval padrão:
+        const atributosBrutos = fichaSalva.atributos || {};
+        const atributosNormalizados = {
+            forca: atributosBrutos.forca || atributosBrutos.Força || 10,
+            destreza: atributosBrutos.destreza || atributosBrutos.Destreza || 10,
+            constituicao: atributosBrutos.constituicao || atributosBrutos.Constituição || 10,
+            inteligencia: atributosBrutos.inteligencia || atributosBrutos.Inteligência || 10,
+            sabedoria: atributosBrutos.sabedoria || atributosBrutos.Sabedoria || 10,
+            carisma: atributosBrutos.carisma || atributosBrutos.Carisma || 10
+        };
+        
+        dadosTemporariosForm = {
+            nome: fichaSalva.nome,
+            raca: fichaSalva.raca,
+            classe: fichaSalva.classe,
+            tipoDado: 'd20'
+        };
+        
+        atributosRolados = atributosNormalizados;
+        
+        if (typeof renderizarFicha === 'function') {
+            renderizarFicha({
+                nome: fichaSalva.nome,
+                raca: fichaSalva.raca,
+                classe: fichaSalva.classe,
+                atributos: atributosNormalizados
+            });
+        }
+        
+    } catch (e) {
+        console.error("Erro ao carregar ficha salva:", e);
+    }
+}
 
         const containerResultado = document.getElementById('containerResultado');
         if (containerResultado && !document.getElementById('btnConcluirFichaServer')) {
