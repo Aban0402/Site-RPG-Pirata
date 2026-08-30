@@ -1,0 +1,16 @@
+{
+  "name": "projeto-rpg",
+  "version": "1.0.0",
+  "description": "Sistema de criação e gerenciamento de fichas de RPG Forge",
+  "main": "server.js",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}

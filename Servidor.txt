@@ -1,0 +1,6 @@
+@echo off
+title Servidor RPG Forge
+echo Iniciando o servidor do RPG Forge...
+start http://localhost:3000
+node server.js
+pause
