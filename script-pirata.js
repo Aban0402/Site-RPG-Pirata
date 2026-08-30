@@ -770,12 +770,10 @@ atualizarVisibilidadeStatusPirata();
 
 document.addEventListener('DOMContentLoaded', () => {
     const btnLogin = document.getElementById('menuLogin') || document.getElementById('btnLogin');
-    
     const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || 'null');
 
     if (btnLogin && usuarioSalvo && usuarioSalvo.nome) {
         btnLogin.textContent = `Logout (${usuarioSalvo.nome})`;
-        
         btnLogin.replaceWith(btnLogin.cloneNode(true));
         const novoBtnLogin = document.getElementById(btnLogin.id || 'menuLogin');
         
@@ -785,31 +783,48 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.reload();
         });
     }
-});
 
-                try {
-                    const resposta = await fetch('/api/fichas', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
+    const containerResultado = document.getElementById('containerResultado');
+    if (containerResultado && !document.getElementById('btnConcluirFichaPirataServer')) {
+        const btnConcluirPirata = document.createElement('button');
+        btnConcluirPirata.id = 'btnConcluirFichaPirataServer';
+        btnConcluirPirata.className = 'mt-4 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all text-xl';
+        btnConcluirPirata.textContent = '💾 Concluir e Salvar Ficha Pirata no Servidor';
+        
+        containerResultado.appendChild(btnConcluirPirata);
 
-                    const dados = await resposta.json();
+        btnConcluirPirata.addEventListener('click', async () => {
+            const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || '{}');
 
-                    if (resposta.ok) {
-                        alert(`🏴‍☠️ Ficha de Pirata Registrada!\n\n${dados.mensagem}\nTotal de fichas no servidor: ${dados.quantiaCriada}`);
-                    } else {
-                        alert(`❌ Erro do Servidor: ${dados.erro}`);
-                    }
-                } catch (erro) {
-                    alert('❌ Erro de Conexão: O servidor não está respondendo.');
+            const payload = {
+                usuario_id: usuarioSalvo.id || null,
+                sistema: 'Pirata',
+                nome: dadosTemporariosForm.nome || document.getElementById('nome')?.value || 'Marujo Sem Nome',
+                raca: dadosTemporariosForm.raca || document.getElementById('raca')?.value || 'Humano',
+                classe: dadosTemporariosForm.classe || document.getElementById('classe')?.value || 'Capitão',
+                atributos: atributosRolados
+            };
+
+            try {
+                const resposta = await fetch('/api/fichas', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const dados = await resposta.json();
+
+                if (resposta.ok) {
+                    alert(`🏴‍☠️ Ficha de Pirata Registrada!\n\n${dados.mensagem}\nTotal de fichas no servidor: ${dados.quantiaCriada}`);
+                } else {
+                    alert(`❌ Erro do Servidor: ${dados.erro}`);
                 }
-            });
-            
-            containerResultado.appendChild(btnConcluir);
-        }
-    });
-}
+            } catch (erro) {
+                alert('❌ Erro de Conexão: O servidor não está respondendo.');
+            }
+        });
+    }
+});
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = {
@@ -820,4 +835,5 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         atualizarSelectStatusPirata, atualizarTelaRolagemPirata, obterLimitePorTipo,
         atualizarLimitesStatusPirata, atualizarVisibilidadeStatusPirata
     };
+}
 }
