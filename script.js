@@ -395,14 +395,22 @@ if (typeof window !== 'undefined' && window.addEventListener) {
 
             btnConcluir.addEventListener('click', async () => {
                 const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || '{}');
+                const nomeHeroi = dadosTemporariosForm.nome || document.getElementById('nome')?.value;
+                const racaHeroi = dadosTemporariosForm.raca || document.getElementById('raca')?.value;
+                const classeHeroi = dadosTemporariosForm.classe || document.getElementById('classe')?.value;
+
+                if (!nomeHeroi || !racaHeroi || !classeHeroi) {
+                    alert('❌ Preencha os dados principais da ficha antes de salvar no servidor!');
+                    return;
+                }
 
                 const payload = {
                     usuario_id: usuarioSalvo.id || null,
-                    sistema: 'Medieval',
-                    nome: dadosTemporariosForm.nome || document.getElementById('nome')?.value || 'Herói Sem Nome',
-                    raca: dadosTemporariosForm.raca || document.getElementById('raca')?.value || 'Humano',
-                    classe: dadosTemporariosForm.classe || document.getElementById('classe')?.value || 'Guerreiro',
-                    atributos: atributosRolados
+                    sistema: 'Medieval', 
+                    nome: nomeHeroi,
+                    raca: racaHeroi,
+                    classe: classeHeroi,
+                    atributos: atributosRolados || {}
                 };
 
                 try {
@@ -417,14 +425,14 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                     if (resposta.ok) {
                         alert(`🎉 Ficha Salva com Sucesso!\n\n${dados.mensagem}\nTotal de fichas no servidor: ${dados.quantiaCriada}`);
                     } else {
-                        alert(`❌ Erro do Servidor: ${dados.erro}`);
+                        alert(`❌ Erro do Servidor: ${dados.erro || 'Desconhecido'}`);
                     }
                 } catch (erro) {
                     alert('❌ Erro de Conexão: O servidor não está respondendo.');
                 }
             });
         }
-    }); 
+    });
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
