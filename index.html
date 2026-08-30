@@ -139,19 +139,25 @@
             const btnLogin = document.getElementById('menuLogin');
             const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || 'null');
 
-            if (btnLogin && usuarioSalvo && usuarioSalvo.nome) {
-                btnLogin.textContent = `Sair (${usuarioSalvo.nome})`;
-                btnLogin.removeAttribute('href'); 
-                btnLogin.style.cursor = 'pointer';
-                
-                btnLogin.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('usuario');
-                    window.location.reload();
-                });
+            if (btnLogin) {
+                if (usuarioSalvo && usuarioSalvo.nome) {
+                    btnLogin.textContent = `Sair (${usuarioSalvo.nome})`;
+                    btnLogin.removeAttribute('href'); 
+                    btnLogin.style.cursor = 'pointer';
+                    
+                    btnLogin.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('usuario');
+                        window.location.reload();
+                    });
+                } else {
+                    btnLogin.setAttribute('href', 'login.html');
+                    btnLogin.textContent = '👤 Login';
+                }
             }
         });
+    </script>
     </script>
 </body>
 </html>
