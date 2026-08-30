@@ -796,13 +796,26 @@ document.addEventListener('DOMContentLoaded', () => {
         btnConcluirPirata.addEventListener('click', async () => {
             const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || '{}');
 
+            const nomeHeroi = dadosTemporariosForm.nome || document.getElementById('nome')?.value;
+            const racaHeroi = dadosTemporariosForm.raca || document.getElementById('raca')?.value;
+            const classeHeroi = dadosTemporariosForm.classe || document.getElementById('classe')?.value;
+
+            if (!nomeHeroi || !racaHeroi || !classeHeroi) {
+                alert('❌ Preencha os dados principais do marujo antes de salvar!');
+                return;
+            }
+
+            // Garante que os atributos e status atuais sejam embutidos corretamente no envio
+            const statusFinais = personagemAtualPirata ? calcularStatusDoPersonagem(personagemAtualPirata) : {};
+
             const payload = {
                 usuario_id: usuarioSalvo.id || null,
                 sistema: 'Pirata',
-                nome: dadosTemporariosForm.nome || document.getElementById('nome')?.value || 'Marujo Sem Nome',
-                raca: dadosTemporariosForm.raca || document.getElementById('raca')?.value || 'Humano',
-                classe: dadosTemporariosForm.classe || document.getElementById('classe')?.value || 'Capitão',
-                atributos: atributosRolados
+                nome: nomeHeroi,
+                raca: racaHeroi,
+                classe: classeHeroi,
+                atributos: atributosRolados || {},
+                status: statusFinais
             };
 
             try {
@@ -817,7 +830,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (resposta.ok) {
                     alert(`🏴‍☠️ Ficha de Pirata Registrada!\n\n${dados.mensagem}\nTotal de fichas no servidor: ${dados.quantiaCriada}`);
                 } else {
-                    alert(`❌ Erro do Servidor: ${dados.erro}`);
+                    alert(`❌ Erro do Servidor: ${dados.erro || 'Erro desconhecido ao salvar'}`);
                 }
             } catch (erro) {
                 alert('❌ Erro de Conexão: O servidor não está respondendo.');
