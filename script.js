@@ -384,6 +384,35 @@ if (btnPNGMedieval && btnPNGMedieval.addEventListener) {
 
 if (typeof window !== 'undefined' && window.addEventListener) {
     window.addEventListener('DOMContentLoaded', () => {
+        const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
+        
+        if (fichaSalvaStr) {
+            try {
+                const fichaSalva = JSON.parse(fichaSalvaStr);
+                
+                localStorage.removeItem('fichaSelecionada');
+                
+                dadosTemporariosForm = {
+                    nome: fichaSalva.nome,
+                    raca: fichaSalva.raca,
+                    classe: fichaSalva.classe,
+                    tipoDado: 'd20'
+                };
+                
+                atributosRolados = fichaSalva.atributos || {};
+                
+                renderizarFicha({
+                    nome: fichaSalva.nome,
+                    raca: fichaSalva.raca,
+                    classe: fichaSalva.classe,
+                    atributos: fichaSalva.atributos
+                });
+                
+            } catch (e) {
+                console.error("Erro ao carregar ficha salva:", e);
+            }
+        }
+
         const containerResultado = document.getElementById('containerResultado');
         if (containerResultado && !document.getElementById('btnConcluirFichaServer')) {
             const btnConcluir = document.createElement('button');
