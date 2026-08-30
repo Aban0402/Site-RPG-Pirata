@@ -422,8 +422,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 }
             });
         }
-    });
-    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    }); 
+}
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = {
         atributosChaves, obterNomeTipoDado, rolarDado, gerarAtributo,
         calcularModificador, aplicarBonus, mostrarTelaRolagem, mostrarResultado,
