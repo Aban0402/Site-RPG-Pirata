@@ -5,7 +5,8 @@ const { Pool } = require('pg');
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.')); 
+app.use(express.static('.'));
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
@@ -46,12 +47,12 @@ app.post('/api/fichas', async (req, res) => {
         const quantiaCriada = countResult.rows[0].count;
 
         res.json({ 
-            mensagem: 'Ficha salva no Banco de Dados com sucesso!', 
+            mensagem: 'Ficha salva com sucesso!', 
             id: result.rows[0].id,
             quantiaCriada: parseInt(quantiaCriada) 
         });
     } catch (err) {
-        console.error('Erro ao inserir no banco:', err);
+        console.error('Erro ao salvar ficha:', err);
         res.status(500).json({ erro: 'Falha ao salvar no banco de dados.' });
     }
 });
