@@ -414,16 +414,21 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                 };
 
                 try {
+                    const token = localStorage.getItem('token');
+
                     const resposta = await fetch('/api/fichas', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}` 
+                        },
                         body: JSON.stringify(payload)
                     });
 
                     const dados = await resposta.json();
 
                     if (resposta.ok) {
-                        alert(`🎉 Ficha Salva com Sucesso!\n\n${dados.mensagem}\nTotal de fichas no servidor: ${dados.quantiaCriada}`);
+                        alert(`Ficha Salva com Sucesso!\n\n${dados.mensagem}\nTotal de fichas no servidor: ${dados.quantiaCriada}`);
                     } else {
                         alert(`❌ Erro do Servidor: ${dados.erro || 'Desconhecido'}`);
                     }
@@ -431,8 +436,6 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                     alert('❌ Erro de Conexão: O servidor não está respondendo.');
                 }
             });
-        }
-    });
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
