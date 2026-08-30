@@ -171,6 +171,19 @@ app.get('/api/fichas', async (req, res) => {
     }
 });
 
+app.get('/api/minhas-fichas', verificarToken, async (req, res) => {
+    const usuario_id = req.user.id;
+
+    try {
+        const queryText = 'SELECT * FROM fichas WHERE usuario_id = $1 ORDER BY criado_em DESC';
+        const result = await pool.query(queryText, [usuario_id]);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Erro ao buscar fichas do usuário:', err);
+        res.status(500).json({ erro: 'Erro ao carregar suas fichas.' });
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
