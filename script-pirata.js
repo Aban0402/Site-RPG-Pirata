@@ -782,7 +782,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
             containerResultado.appendChild(btnConcluir);
 
             btnConcluir.addEventListener('click', async () => {
+                const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || '{}');
+
                 const payload = {
+                    usuario_id: usuarioSalvo.id || null,
                     sistema: 'Pirata',
                     nome: dadosTemporariosForm.nome || document.getElementById('nome')?.value || 'Marujo Sem Nome',
                     raca: dadosTemporariosForm.raca || document.getElementById('raca')?.value || 'Humano',
