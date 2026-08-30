@@ -836,4 +836,4 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         atualizarLimitesStatusPirata, atualizarVisibilidadeStatusPirata
     };
 }
-}
+
