@@ -34,14 +34,18 @@
                     return;
                 }
 
-                container.innerHTML = fichas.map(ficha => `
-                    <div class="bg-slate-800 p-4 rounded-lg shadow border border-slate-700">
-                        <h3 class="text-xl font-bold text-amber-300">${ficha.nome}</h3>
-                        <p><strong>Sistema:</strong> ${ficha.sistema}</p>
-                        <p><strong>Raça:</strong> ${ficha.raca} | <strong>Classe:</strong> ${ficha.classe}</p>
-                        <p class="text-sm text-gray-400 mt-2">Criado em: ${new Date(ficha.criado_em).toLocaleDateString('pt-BR')}</p>
-                    </div>
-                `).join('');
+        container.innerHTML = fichas.map(ficha => `
+        <div class="bg-slate-800 p-4 rounded-lg shadow border border-slate-700 flex justify-between items-center">
+        <div>
+            <h3 class="text-xl font-bold text-amber-300">${ficha.nome}</h3>
+            <p class="text-sm text-gray-300">Sistema: ${ficha.sistema} | Raça: ${ficha.raca} | Classe: ${ficha.classe}</p>
+            <p class="text-xs text-gray-500 mt-1">Criado em: ${new Date(ficha.criado_em).toLocaleDateString('pt-BR')}</p>
+        </div>
+        <button onclick='abrirFichaSalva(${JSON.stringify(ficha)})' class="bg-amber-500 hover:bg-amber-400 text-black font-bold px-4 py-2 rounded text-sm">
+            📜 Abrir Ficha
+        </button>
+        </div>
+    `).join('');
             } catch (erro) {
                 console.error('Erro ao buscar fichas:', erro);
             }
