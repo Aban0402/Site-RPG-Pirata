@@ -135,15 +135,16 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-app.post('/api/fichas', async (req, res) => {
-    const { usuario_id, sistema, nome, raca, classe, atributos } = req.body;
+app.post('/api/fichas', verificarToken, async (req, res) => {
+    const usuario_id = req.user.id;
+    const { sistema, nome, raca, classe, atributos } = req.body;
 
     try {
         const queryText = `
             INSERT INTO fichas (usuario_id, sistema, nome, raca, classe, atributos)
             VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;
         `;
-        const values = [usuario_id || null, sistema || 'Pirata', nome, raca, classe, JSON.stringify(atributos)];
+        const values = [usuario_id, sistema || 'Pirata', nome, raca, classe, JSON.stringify(atributos)];
         const result = await pool.query(queryText, values);
 
         const countResult = await pool.query('SELECT COUNT(*) FROM fichas');
