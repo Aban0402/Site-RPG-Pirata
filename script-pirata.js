@@ -805,9 +805,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Garante que os atributos e status atuais sejam embutidos corretamente no envio
             const statusFinais = personagemAtualPirata ? calcularStatusDoPersonagem(personagemAtualPirata) : {};
-
             const payload = {
                 usuario_id: usuarioSalvo.id || null,
                 sistema: 'Pirata',
