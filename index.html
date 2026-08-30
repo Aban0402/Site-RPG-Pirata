@@ -141,6 +141,9 @@
 
             if (btnLogin && usuarioSalvo && usuarioSalvo.nome) {
                 btnLogin.textContent = `Sair (${usuarioSalvo.nome})`;
+                btnLogin.removeAttribute('href'); 
+                btnLogin.style.cursor = 'pointer';
+                
                 btnLogin.addEventListener('click', (e) => {
                     e.preventDefault();
                     localStorage.removeItem('token');
