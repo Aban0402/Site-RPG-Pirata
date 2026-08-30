@@ -244,7 +244,6 @@ if (formulario && formulario.addEventListener) {
                     carisma: gerarAtributo(tipoDado)
                 }
             };
-            atributosRolados = { ...personagemAleatorio.atributos };
             mostrarResultado();
             renderizarFicha(personagemAleatorio);
         }
@@ -255,12 +254,10 @@ const tipoStatusSelect = document.getElementById("tipoStatus");
 if (tipoStatusSelect && tipoStatusSelect.addEventListener) {
     tipoStatusSelect.addEventListener("change", function () {
         const containerInputs = document.getElementById("containerStatusManuais");
-        if (containerInputs) {
-            if (this.value === "manual") {
-                containerInputs.classList.remove("hidden");
-            } else {
-                containerInputs.classList.add("hidden");
-            }
+        if (this.value === "manual") {
+            containerInputs.classList.remove("hidden");
+        } else {
+            containerInputs.classList.add("hidden");
         }
     });
 }
@@ -326,11 +323,10 @@ if (menuAleatorio && menuAleatorio.addEventListener) {
     menuAleatorio.addEventListener("click", () => {
         modoCriacao = "aleatorio";
         if (menuDropdown) menuDropdown.classList.add("hidden");
-        document.getElementById("telaFormulario")?.classList.remove("hidden");
-        document.getElementById("rolagem")?.classList.add("hidden");
-        document.getElementById("resultado")?.classList.add("hidden");
-        const btnCriar = document.getElementById("btnCriar");
-        if (btnCriar) btnCriar.textContent = "Criar Personagem Aleatório 🎲";
+        document.getElementById("telaFormulario").classList.remove("hidden");
+        document.getElementById("rolagem").classList.add("hidden");
+        document.getElementById("resultado").classList.add("hidden");
+        document.getElementById("btnCriar").textContent = "Criar Personagem Aleatório 🎲";
     });
 }
 
@@ -339,11 +335,10 @@ if (menuManual && menuManual.addEventListener) {
     menuManual.addEventListener("click", () => {
         modoCriacao = "manual";
         if (menuDropdown) menuDropdown.classList.add("hidden");
-        document.getElementById("telaFormulario")?.classList.remove("hidden");
-        document.getElementById("rolagem")?.classList.add("hidden");
-        document.getElementById("resultado")?.classList.add("hidden");
-        const btnCriar = document.getElementById("btnCriar");
-        if (btnCriar) btnCriar.textContent = "Avançar para Distribuição de Dados ⚔️";
+        document.getElementById("telaFormulario").classList.remove("hidden");
+        document.getElementById("rolagem").classList.add("hidden");
+        document.getElementById("resultado").classList.add("hidden");
+        document.getElementById("btnCriar").textContent = "Avançar para Distribuição de Dados ⚔️";
     });
 }
 
@@ -388,7 +383,7 @@ if (btnPNGMedieval && btnPNGMedieval.addEventListener) {
 if (typeof window !== 'undefined' && window.addEventListener) {
     window.addEventListener('DOMContentLoaded', () => {
         const containerResultado = document.getElementById('containerResultado');
-        if (containerResultado && !document.getElementById('btnConcluirFichaServer')) {
+        if (containerResultado) {
             const btnConcluir = document.createElement('button');
             btnConcluir.id = 'btnConcluirFichaServer';
             btnConcluir.className = 'mt-4 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all text-xl';
@@ -397,7 +392,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
             containerResultado.appendChild(btnConcluir);
 
             btnConcluir.addEventListener('click', async () => {
+                const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || '{}');
+
                 const payload = {
+                    usuario_id: usuarioSalvo.id || null,
                     sistema: 'Medieval',
                     nome: dadosTemporariosForm.nome || document.getElementById('nome')?.value || 'Herói Sem Nome',
                     raca: dadosTemporariosForm.raca || document.getElementById('raca')?.value || 'Humano',
