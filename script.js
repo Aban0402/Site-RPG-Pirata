@@ -444,4 +444,4 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         calcularModificador, aplicarBonus, mostrarTelaRolagem, mostrarResultado,
         atualizarTextoRolagem, renderizarFicha, atualizarSelectAtributos
     };
-}
+
