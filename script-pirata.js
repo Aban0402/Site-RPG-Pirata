@@ -709,7 +709,7 @@ function atualizarVisibilidadeStatusPirata() {
     const texto = document.getElementById("textoStatusManualPirata");
     const modo = document.getElementById("tipoStatusPirata")?.value || "auto";
 
-    if (container && container.classList && typeof container.classList.toggle === 'function') {
+    if (container) {
         container.classList.toggle("hidden", modo !== "manual-escrito");
     }
 
@@ -727,12 +727,10 @@ function atualizarVisibilidadeStatusPirata() {
 
         const modoEscrita = modo === "manual-escrito";
         input.readOnly = !modoEscrita;
-        if (input.classList && typeof input.classList.toggle === 'function') {
-            input.classList.toggle("bg-gray-200", !modoEscrita);
-            input.classList.toggle("text-gray-600", !modoEscrita);
-            input.classList.toggle("bg-cyan-50", modoEscrita);
-            input.classList.toggle("text-black", modoEscrita);
-        }
+        input.classList.toggle("bg-gray-200", !modoEscrita);
+        input.classList.toggle("text-gray-600", !modoEscrita);
+        input.classList.toggle("bg-cyan-50", modoEscrita);
+        input.classList.toggle("text-black", modoEscrita);
     });
 
     atualizarLimitesStatusPirata();
@@ -775,11 +773,10 @@ if (typeof window !== 'undefined' && window.addEventListener) {
         const containerResultado = document.getElementById('containerResultado');
         if (containerResultado) {
             const btnConcluir = document.createElement('button');
-            btnConcluir.id = 'btnConcluirPirataServer';
-            btnConcluir.className = 'mt-4 w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all text-xl';
-            btnConcluir.textContent = '⚓ Concluir e Salvar Ficha de Pirata';
             
-            containerResultado.appendChild(btnConcluir);
+            // Adicionando texto e estilos para o botão aparecer corretamente
+            btnConcluir.textContent = "💾 Salvar Ficha no Servidor";
+            btnConcluir.className = "mt-4 bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded shadow-lg w-full transition-all cursor-pointer fonte-titulo-pirata uppercase tracking-wider";
 
             btnConcluir.addEventListener('click', async () => {
                 const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -811,6 +808,8 @@ if (typeof window !== 'undefined' && window.addEventListener) {
                     alert('❌ Erro de Conexão: O servidor não está respondendo.');
                 }
             });
+            
+            containerResultado.appendChild(btnConcluir);
         }
     });
 }
