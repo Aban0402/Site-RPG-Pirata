@@ -196,58 +196,60 @@ function atualizarSelectAtributos() {
 const formulario = document.getElementById("formPersonagem");
 if (formulario && formulario.addEventListener) {
     formulario.addEventListener("submit", function (event) {
-        event.preventDefault();
-        const nome = document.getElementById("nome").value;
-        const raca = document.getElementById("raca").value;
-        const classe = document.getElementById("classe").value;
+    event.preventDefault();
+    const nome = document.getElementById("nome").value;
+    const raca = document.getElementById("raca").value;
+    const classe = document.getElementById("classe").value;
 
-        const tipoStatus = document.getElementById("tipoStatus").value;
-        const tipoDado = document.getElementById("tipoDado").value;
-        const vidaManual = document.getElementById("vidaManual").value;
-        const manaManual = document.getElementById("manaManual").value;
-        const energiaManual = document.getElementById("energiaManual").value;
+    const tipoStatus = document.getElementById("tipoStatus").value;
+    const tipoDado = document.getElementById("tipoDado").value;
+    const vidaManual = document.getElementById("vidaManual").value;
+    const manaManual = document.getElementById("manaManual").value;
+    const energiaManual = document.getElementById("energiaManual").value;
 
-        if (nome === "" || raca === "" || classe === "") {
-            alert("Por favor, informe o Nome, a Raça e a Classe do seu herói!");
-            return;
+    if (nome === "" || raca === "" || classe === "") {
+        alert("Por favor, informe o Nome, a Raça e a Classe do seu herói!");
+        return;
+    }
+
+    dadosTemporariosForm = { nome, raca, classe, tipoStatus, tipoDado, vidaManual, manaManual, energiaManual };
+
+    if (modoCriacao === "manual") {
+        mostrarTelaRolagem();
+
+        atributosPreenchidos = [];
+        atributosRolados = {};
+
+        atualizarTextoRolagem();
+
+        const botaoRolar = document.getElementById("rolarDado");
+        if (botaoRolar) {
+            botaoRolar.className = "bg-red-600 hover:bg-red-500 px-8 py-4 rounded text-xl font-bold shadow-md transition-all";
         }
 
-        dadosTemporariosForm = { nome, raca, classe, tipoStatus, tipoDado, vidaManual, manaManual, energiaManual };
+        const select = document.getElementById("selectAtributoManual");
+        if (select) select.disabled = false;
+        atualizarSelectAtributos();
+    } else {
+        atributosRolados = {
+            forca: gerarAtributo(tipoDado),
+            destreza: gerarAtributo(tipoDado),
+            constituicao: gerarAtributo(tipoDado),
+            inteligencia: gerarAtributo(tipoDado),
+            sabedoria: gerarAtributo(tipoDado),
+            carisma: gerarAtributo(tipoDado)
+        };
 
-        if (modoCriacao === "manual") {
-            mostrarTelaRolagem();
-
-            atributosPreenchidos = [];
-            atributosRolados = {};
-
-            atualizarTextoRolagem();
-
-            const botaoRolar = document.getElementById("rolarDado");
-            if (botaoRolar) {
-                botaoRolar.className = "bg-red-600 hover:bg-red-500 px-8 py-4 rounded text-xl font-bold shadow-md transition-all";
-            }
-
-            const select = document.getElementById("selectAtributoManual");
-            if (select) select.disabled = false;
-            atualizarSelectAtributos();
-        } else {
-            const personagemAleatorio = {
-                nome,
-                raca,
-                classe,
-                atributos: {
-                    forca: gerarAtributo(tipoDado),
-                    destreza: gerarAtributo(tipoDado),
-                    constituicao: gerarAtributo(tipoDado),
-                    inteligencia: gerarAtributo(tipoDado),
-                    sabedoria: gerarAtributo(tipoDado),
-                    carisma: gerarAtributo(tipoDado)
-                }
-            };
-            mostrarResultado();
-            renderizarFicha(personagemAleatorio);
-        }
-    });
+        const personagemAleatorio = {
+            nome,
+            raca,
+            classe,
+            atributos: { ...atributosRolados }
+        };
+        mostrarResultado();
+        renderizarFicha(personagemAleatorio);
+    }
+});
 }
 
 const tipoStatusSelect = document.getElementById("tipoStatus");
