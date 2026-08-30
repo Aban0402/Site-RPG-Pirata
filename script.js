@@ -383,7 +383,7 @@ if (btnPNGMedieval && btnPNGMedieval.addEventListener) {
 if (typeof window !== 'undefined' && window.addEventListener) {
     window.addEventListener('DOMContentLoaded', () => {
         const containerResultado = document.getElementById('containerResultado');
-        if (containerResultado) {
+        if (containerResultado && !document.getElementById('btnConcluirFichaServer')) {
             const btnConcluir = document.createElement('button');
             btnConcluir.id = 'btnConcluirFichaServer';
             btnConcluir.className = 'mt-4 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all text-xl';
@@ -423,12 +423,4 @@ if (typeof window !== 'undefined' && window.addEventListener) {
             });
         }
     });
-}
-
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-    module.exports = {
-        atributosChaves, obterNomeTipoDado, rolarDado, gerarAtributo,
-        calcularModificador, aplicarBonus, mostrarTelaRolagem, mostrarResultado,
-        atualizarTextoRolagem, renderizarFicha, atualizarSelectAtributos
-    };
 }
