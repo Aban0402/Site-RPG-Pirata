@@ -817,9 +817,14 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             try {
+                const token = localStorage.getItem('token');
+
                 const resposta = await fetch('/api/fichas', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    },
                     body: JSON.stringify(payload)
                 });
 
