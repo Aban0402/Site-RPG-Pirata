@@ -768,27 +768,24 @@ if (tipoStatusPirata && tipoStatusPirata.addEventListener) {
 
 atualizarVisibilidadeStatusPirata();
 
-if (typeof window !== 'undefined' && window.addEventListener) {
-    window.addEventListener('DOMContentLoaded', () => {
-        const containerResultado = document.getElementById('containerResultado');
-        if (containerResultado) {
-            const btnConcluir = document.createElement('button');
-            
-            // Adicionando texto e estilos para o botão aparecer corretamente
-            btnConcluir.textContent = "💾 Salvar Ficha no Servidor";
-            btnConcluir.className = "mt-4 bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded shadow-lg w-full transition-all cursor-pointer fonte-titulo-pirata uppercase tracking-wider";
+document.addEventListener('DOMContentLoaded', () => {
+    const btnLogin = document.getElementById('menuLogin') || document.getElementById('btnLogin');
+    
+    const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || 'null');
 
-            btnConcluir.addEventListener('click', async () => {
-                const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || '{}');
-
-                const payload = {
-                    usuario_id: usuarioSalvo.id || null,
-                    sistema: 'Pirata',
-                    nome: dadosTemporariosForm.nome || document.getElementById('nome')?.value || 'Marujo Sem Nome',
-                    raca: dadosTemporariosForm.raca || document.getElementById('raca')?.value || 'Humano',
-                    classe: dadosTemporariosForm.classe || document.getElementById('classe')?.value || 'Guerreiro',
-                    atributos: atributosRolados
-                };
+    if (btnLogin && usuarioSalvo && usuarioSalvo.nome) {
+        btnLogin.textContent = `Logout (${usuarioSalvo.nome})`;
+        
+        btnLogin.replaceWith(btnLogin.cloneNode(true));
+        const novoBtnLogin = document.getElementById(btnLogin.id || 'menuLogin');
+        
+        novoBtnLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('usuario');
+            window.location.reload();
+        });
+    }
+});
 
                 try {
                     const resposta = await fetch('/api/fichas', {
