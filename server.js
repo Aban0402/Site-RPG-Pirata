@@ -11,6 +11,22 @@ app.use(express.static('.'));
 
 const connectionString = process.env.DATABASE_URL;
 const JWT_SECRET = process.env.JWT_SECRET || 'chave_secreta_super_segura';
+function verificarToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ erro: 'Token de autenticação não fornecido.' });
+    }
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ erro: 'Token inválido ou expirado.' });
+        }
+        req.user = user;
+        next();
+    });
+}
 
 if (!connectionString) {
   console.error("ERRO: A variável DATABASE_URL não foi definida no ambiente!");
