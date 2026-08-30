@@ -5,11 +5,16 @@ const { Pool } = require('pg');
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.'));
+app.use(express.static('.')); 
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  console.error("ERRO: A variável DATABASE_URL não foi definida no ambiente!");
+}
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
+    connectionString: connectionString,
+    ssl: connectionString ? { rejectUnauthorized: false } : false
 });
 
 async function initDB() {
@@ -47,12 +52,12 @@ app.post('/api/fichas', async (req, res) => {
         const quantiaCriada = countResult.rows[0].count;
 
         res.json({ 
-            mensagem: 'Ficha salva com sucesso!', 
+            mensagem: 'Ficha salva no Banco de Dados com sucesso!', 
             id: result.rows[0].id,
             quantiaCriada: parseInt(quantiaCriada) 
         });
     } catch (err) {
-        console.error('Erro ao salvar ficha:', err);
+        console.error('Erro ao inserir no banco:', err);
         res.status(500).json({ erro: 'Falha ao salvar no banco de dados.' });
     }
 });
