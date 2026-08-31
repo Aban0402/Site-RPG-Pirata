@@ -779,6 +779,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const fichaSalva = JSON.parse(fichaSalvaStr);
             if (fichaSalva.sistema === 'Pirata') {
                 localStorage.removeItem('fichaSelecionada');
+                
                 if (typeof dadosTemporariosForm !== 'undefined') {
                     dadosTemporariosForm = {
                         nome: fichaSalva.nome,
@@ -791,13 +792,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (typeof atributosRolados !== 'undefined') {
                     atributosRolados = fichaSalva.atributos || {};
                 }
+
+                window.personagemAtualPirata = {
+                    nome: fichaSalva.nome,
+                    raca: fichaSalva.raca,
+                    classe: fichaSalva.classe,
+                    atributos: fichaSalva.atributos
+                };
+
                 const telaFormulario = document.getElementById('telaFormulario') || document.querySelector('.formulario-container');
                 const containerResultado = document.getElementById('containerResultado') || document.getElementById('rolagem');
                 
                 if (telaFormulario) telaFormulario.style.display = 'none';
                 if (containerResultado) containerResultado.style.display = 'block';
+
                 if (typeof renderizarFichaPirata === 'function') {
-                    renderizarFichaPirata(fichaSalva);
+                    renderizarFichaPirata(window.personagemAtualPirata);
                 }
             }
         } catch (e) {
@@ -806,9 +816,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-});
-
-document.addEventListener('DOMContentLoaded', () => {
     const btnLogin = document.getElementById('menuLogin') || document.getElementById('btnLogin');
     const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || 'null');
 
@@ -836,23 +843,23 @@ document.addEventListener('DOMContentLoaded', () => {
         btnConcluirPirata.addEventListener('click', async () => {
             const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || '{}');
 
-            const nomeHeroi = dadosTemporariosForm.nome || document.getElementById('nome')?.value;
-            const racaHeroi = dadosTemporariosForm.raca || document.getElementById('raca')?.value;
-            const classeHeroi = dadosTemporariosForm.classe || document.getElementById('classe')?.value;
+            const nomeHeroi = (typeof dadosTemporariosForm !== 'undefined' ? dadosTemporariosForm.nome : null) || document.getElementById('nome')?.value || (window.personagemAtualPirata?.nome);
+            const racaHeroi = (typeof dadosTemporariosForm !== 'undefined' ? dadosTemporariosForm.raca : null) || document.getElementById('raca')?.value || (window.personagemAtualPirata?.raca);
+            const classeHeroi = (typeof dadosTemporariosForm !== 'undefined' ? dadosTemporariosForm.classe : null) || document.getElementById('classe')?.value || (window.personagemAtualPirata?.classe);
 
             if (!nomeHeroi || !racaHeroi || !classeHeroi) {
                 alert('❌ Preencha os dados principais do marujo antes de salvar!');
                 return;
             }
 
-            const statusFinais = personagemAtualPirata ? calcularStatusDoPersonagem(personagemAtualPirata) : {};
+            const statusFinais = typeof calcularStatusDoPersonagem === 'function' && window.personagemAtualPirata ? calcularStatusDoPersonagem(window.personagemAtualPirata) : {};
             const payload = {
                 usuario_id: usuarioSalvo.id || null,
                 sistema: 'Pirata',
                 nome: nomeHeroi,
                 raca: racaHeroi,
                 classe: classeHeroi,
-                atributos: atributosRolados || {},
+                atributos: (typeof atributosRolados !== 'undefined' ? atributosRolados : {}) || window.personagemAtualPirata?.atributos || {},
                 status: statusFinais
             };
 
