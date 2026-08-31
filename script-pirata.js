@@ -772,39 +772,31 @@ if (tipoStatusPirata && tipoStatusPirata.addEventListener) {
 
 atualizarVisibilidadeStatusPirata();
 
-document.addEventListener("DOMContentLoaded", () => {
+// Verifica se veio de Minhas Fichas (Pirata)
     const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
-
     if (fichaSalvaStr) {
         try {
             const fichaSalva = JSON.parse(fichaSalvaStr);
-            localStorage.removeItem('fichaSelecionada');
-            
             if (fichaSalva.sistema === 'Pirata') {
-                const atributosBrutos = fichaSalva.atributos || {};
-                const atributosPirataNormalizados = {
-                    forca: atributosBrutos.forca || 7,
-                    destreza: atributosBrutos.destreza || 7,
-                    constituicao: atributosBrutos.constituicao || 7,
-                    sorte: atributosBrutos.sorte || 7,
-                    carisma: atributosBrutos.carisma || 7
+                localStorage.removeItem('fichaSelecionada');
+                dadosTemporariosForm = {
+                    nome: fichaSalva.nome,
+                    raca: fichaSalva.raca,
+                    classe: fichaSalva.classe,
+                    tipoStatus: 'auto'
                 };
-
-                atributosRolados = atributosPirataNormalizados;
+                atributosRolados = fichaSalva.atributos || {};
                 personagemAtualPirata = {
                     nome: fichaSalva.nome,
                     raca: fichaSalva.raca,
                     classe: fichaSalva.classe,
-                    atributos: atributosPirataNormalizados
+                    atributos: fichaSalva.atributos
                 };
-
-                if (typeof renderizarFichaPirata === 'function') {
-                    renderizarFichaPirata(personagemAtualPirata);
-                }
-                return; 
+                renderizarFichaPirata(personagemAtualPirata);
+                return;
             }
         } catch (e) {
-            console.error("Erro ao carregar ficha salva:", e);
+            localStorage.removeItem('fichaSelecionada');
         }
     }
 
@@ -812,7 +804,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (telaFormulario) {
         telaFormulario.classList.remove("hidden");
     }
-});
 
 document.addEventListener('DOMContentLoaded', () => {
     const btnLogin = document.getElementById('menuLogin') || document.getElementById('btnLogin');
