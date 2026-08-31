@@ -591,8 +591,12 @@ if (btnRolar && btnRolar.addEventListener) {
         if (!selectStatus) return;
 
         if (statusPreenchidosPirata.length === 3) {
+            const rolagemDiv = document.getElementById("rolagem");
+            if (rolagemDiv) rolagemDiv.classList.add("hidden");
+            
             renderizarFichaPirata(personagemAtualPirata);
             return;
+
         }
 
         const selecionado = selectStatus.value;
@@ -768,6 +772,13 @@ if (tipoStatusPirata && tipoStatusPirata.addEventListener) {
 
 atualizarVisibilidadeStatusPirata();
 
+document.addEventListener("DOMContentLoaded", () => {
+    const telaFormulario = document.getElementById("telaFormulario");
+    if (telaFormulario) {
+        telaFormulario.classList.remove("hidden");
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const btnLogin = document.getElementById('menuLogin') || document.getElementById('btnLogin');
     const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || 'null');
@@ -852,4 +863,3 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         atualizarLimitesStatusPirata, atualizarVisibilidadeStatusPirata
     };
 }
-
