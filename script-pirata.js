@@ -773,6 +773,7 @@ if (tipoStatusPirata && tipoStatusPirata.addEventListener) {
 atualizarVisibilidadeStatusPirata();
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. RESGATA A FICHA SALVA DO LOCALSTORAGE AO ABRIR A PÁGINA
     const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
     if (fichaSalvaStr) {
         try {
@@ -793,6 +794,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     atributosRolados = fichaSalva.atributos || {};
                 }
 
+                // Define o personagem atual para que as funções de status e renderização reconheçam
                 window.personagemAtualPirata = {
                     nome: fichaSalva.nome,
                     raca: fichaSalva.raca,
@@ -803,8 +805,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const telaFormulario = document.getElementById('telaFormulario') || document.querySelector('.formulario-container');
                 const containerResultado = document.getElementById('containerResultado') || document.getElementById('rolagem');
                 
-                if (telaFormulario) telaFormulario.style.display = 'none';
-                if (containerResultado) containerResultado.style.display = 'block';
+                if (telaFormulario) telaFormulario.classList.add('hidden');
+                if (containerResultado) containerResultado.classList.remove('hidden');
 
                 if (typeof renderizarFichaPirata === 'function') {
                     renderizarFichaPirata(window.personagemAtualPirata);
@@ -816,6 +818,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // 2. CONFIGURAÇÃO DO BOTÃO DE LOGIN / LOGOUT
     const btnLogin = document.getElementById('menuLogin') || document.getElementById('btnLogin');
     const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || 'null');
 
@@ -831,6 +834,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 3. CRIAÇÃO DO BOTÃO DE SALVAR NO SERVIDOR
     const containerResultado = document.getElementById('containerResultado');
     if (containerResultado && !document.getElementById('btnConcluirFichaPirataServer')) {
         const btnConcluirPirata = document.createElement('button');
@@ -843,35 +847,34 @@ document.addEventListener('DOMContentLoaded', () => {
         btnConcluirPirata.addEventListener('click', async () => {
             const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || '{}');
 
-            const nomeHeroi = (typeof dadosTemporariosForm !== 'undefined' ? dadosTemporariosForm.nome : null) || document.getElementById('nome')?.value || (window.personagemAtualPirata?.nome);
-            const racaHeroi = (typeof dadosTemporariosForm !== 'undefined' ? dadosTemporariosForm.raca : null) || document.getElementById('raca')?.value || (window.personagemAtualPirata?.raca);
-            const classeHeroi = (typeof dadosTemporariosForm !== 'undefined' ? dadosTemporariosForm.classe : null) || document.getElementById('classe')?.value || (window.personagemAtualPirata?.classe);
+            const nomeHeroi = dadosTemporariosForm.nome || document.getElementById('nome')?.value || window.personagemAtualPirata?.nome;
+            const racaHeroi = dadosTemporariosForm.raca || document.getElementById('raca')?.value || window.personagemAtualPirata?.raca;
+            const classeHeroi = dadosTemporariosForm.classe || document.getElementById('classe')?.value || window.personagemAtualPirata?.classe;
 
             if (!nomeHeroi || !racaHeroi || !classeHeroi) {
                 alert('❌ Preencha os dados principais do marujo antes de salvar!');
                 return;
             }
 
-            const statusFinais = typeof calcularStatusDoPersonagem === 'function' && window.personagemAtualPirata ? calcularStatusDoPersonagem(window.personagemAtualPirata) : {};
+            const statusFinais = (typeof personagemAtualPirata !== 'undefined' && personagemAtualPirata) ? calcularStatusDoPersonagem(personagemAtualPirata) : {};
             const payload = {
                 usuario_id: usuarioSalvo.id || null,
                 sistema: 'Pirata',
                 nome: nomeHeroi,
                 raca: racaHeroi,
                 classe: classeHeroi,
-                atributos: (typeof atributosRolados !== 'undefined' ? atributosRolados : {}) || window.personagemAtualPirata?.atributos || {},
+                atributos: atributosRolados || window.personagemAtualPirata?.atributos || {},
                 status: statusFinais
             };
 
             try {
                 const token = localStorage.getItem('token');
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = `Bearer ${token}`;
 
                 const resposta = await fetch('/api/fichas', {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` 
-                    },
+                    headers: headers,
                     body: JSON.stringify(payload)
                 });
 
