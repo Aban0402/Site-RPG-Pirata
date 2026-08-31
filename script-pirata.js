@@ -773,7 +773,6 @@ if (tipoStatusPirata && tipoStatusPirata.addEventListener) {
 atualizarVisibilidadeStatusPirata();
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. RESGATA A FICHA SALVA DO LOCALSTORAGE AO ABRIR A PÁGINA
     const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
     if (fichaSalvaStr) {
         try {
@@ -794,7 +793,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     atributosRolados = fichaSalva.atributos || {};
                 }
 
-                // Define o personagem atual para que as funções de status e renderização reconheçam
                 window.personagemAtualPirata = {
                     nome: fichaSalva.nome,
                     raca: fichaSalva.raca,
@@ -818,7 +816,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 2. CONFIGURAÇÃO DO BOTÃO DE LOGIN / LOGOUT
     const btnLogin = document.getElementById('menuLogin') || document.getElementById('btnLogin');
     const usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || 'null');
 
@@ -834,7 +831,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. CRIAÇÃO DO BOTÃO DE SALVAR NO SERVIDOR
     const containerResultado = document.getElementById('containerResultado');
     if (containerResultado && !document.getElementById('btnConcluirFichaPirataServer')) {
         const btnConcluirPirata = document.createElement('button');
