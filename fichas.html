@@ -15,8 +15,12 @@
 
     <script>
         function abrirFichaSalva(ficha) {
-            localStorage.setItem('fichaSelecionada', JSON.stringify(ficha));
-            window.location.href = 'index.html';
+    localStorage.setItem('fichaSelecionada', JSON.stringify(ficha));
+    if (ficha.sistema && ficha.sistema.toLowerCase().includes('pirata')) {
+        window.location.href = 'pirata_2.html';
+    } else {
+        window.location.href = 'index_2.html';
+    }
         }
 
         async function carregarMinhasFichas() {
