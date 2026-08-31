@@ -773,6 +773,41 @@ if (tipoStatusPirata && tipoStatusPirata.addEventListener) {
 atualizarVisibilidadeStatusPirata();
 
 document.addEventListener("DOMContentLoaded", () => {
+    const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
+
+    if (fichaSalvaStr) {
+        try {
+            const fichaSalva = JSON.parse(fichaSalvaStr);
+            localStorage.removeItem('fichaSelecionada');
+            
+            if (fichaSalva.sistema === 'Pirata') {
+                const atributosBrutos = fichaSalva.atributos || {};
+                const atributosPirataNormalizados = {
+                    forca: atributosBrutos.forca || 7,
+                    destreza: atributosBrutos.destreza || 7,
+                    constituicao: atributosBrutos.constituicao || 7,
+                    sorte: atributosBrutos.sorte || 7,
+                    carisma: atributosBrutos.carisma || 7
+                };
+
+                atributosRolados = atributosPirataNormalizados;
+                personagemAtualPirata = {
+                    nome: fichaSalva.nome,
+                    raca: fichaSalva.raca,
+                    classe: fichaSalva.classe,
+                    atributos: atributosPirataNormalizados
+                };
+
+                if (typeof renderizarFichaPirata === 'function') {
+                    renderizarFichaPirata(personagemAtualPirata);
+                }
+                return; 
+            }
+        } catch (e) {
+            console.error("Erro ao carregar ficha salva:", e);
+        }
+    }
+
     const telaFormulario = document.getElementById("telaFormulario");
     if (telaFormulario) {
         telaFormulario.classList.remove("hidden");
