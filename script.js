@@ -385,7 +385,6 @@ if (btnPNGMedieval && btnPNGMedieval.addEventListener) {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Tratamento isolado para a ficha salva (Medieval)
     const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
     if (fichaSalvaStr) {
         try {
@@ -399,6 +398,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     tipoDado: 'd20'
                 };
                 atributosRolados = fichaSalva.atributos || {};
+                const telaFormulario = document.getElementById('telaFormulario') || document.querySelector('.formulario-container');
+                const containerResultado = document.getElementById('containerResultado') || document.getElementById('rolagem');
+                
+                if (telaFormulario) telaFormulario.style.display = 'none';
+                if (containerResultado) containerResultado.style.display = 'block';
+
                 renderizarFicha({
                     nome: fichaSalva.nome,
                     raca: fichaSalva.raca,
