@@ -339,7 +339,7 @@ if (menuManual && menuManual.addEventListener) {
         if (menuDropdown) menuDropdown.classList.add("hidden");
         document.getElementById("telaFormulario").classList.remove("hidden");
         document.getElementById("rolagem").classList.add("hidden");
-        document.getElementById("resultado").classList.add("hidden");
+        document.getElementById("containerResultado").classList.add("hidden");
         document.getElementById("btnCriar").textContent = "Avançar para Distribuição de Dados ⚔️";
     });
 }
@@ -382,19 +382,19 @@ if (btnPNGMedieval && btnPNGMedieval.addEventListener) {
     });
 }
 
-if (typeof window !== 'undefined' && window.addEventListener) {
-    window.addEventListener('DOMContentLoaded', () => {
-        const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
 
+
+document.addEventListener("DOMContentLoaded", () => {
+    const telaFormulario = document.getElementById("telaFormulario");
+    if (telaFormulario) {
+        telaFormulario.classList.remove("hidden");
+    }
 if (fichaSalvaStr) {
     try {
         const fichaSalva = JSON.parse(fichaSalvaStr);
         localStorage.removeItem('fichaSelecionada');
         
-        // Verifica se a ficha salva pertence ao sistema Pirata
         if (fichaSalva.sistema === 'Pirata') {
-            // Se você tiver uma página específica para o pirata, redireciona passando os dados ou ID
-            // Ou se renderiza na mesma estrutura, normaliza as chaves piratas:
             const atributosBrutos = fichaSalva.atributos || {};
             const atributosPirataNormalizados = {
                 forca: atributosBrutos.forca || 7,
@@ -404,7 +404,6 @@ if (fichaSalvaStr) {
                 carisma: atributosBrutos.carisma || 7
             };
 
-            // Atribui ao contexto atual do pirata
             atributosRolados = atributosPirataNormalizados;
             personagemAtualPirata = {
                 nome: fichaSalva.nome,
@@ -419,7 +418,6 @@ if (fichaSalvaStr) {
             return;
         }
 
-        // Caso seja a ficha Medieval padrão:
         const atributosBrutos = fichaSalva.atributos || {};
         const atributosNormalizados = {
             forca: atributosBrutos.forca || atributosBrutos.Força || 10,
@@ -507,7 +505,6 @@ if (fichaSalvaStr) {
             });
         }
     });
-}
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = {
