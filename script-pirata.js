@@ -773,42 +773,48 @@ if (tipoStatusPirata && tipoStatusPirata.addEventListener) {
 atualizarVisibilidadeStatusPirata();
 
 document.addEventListener('DOMContentLoaded', () => {
+    const forcarExibicaoPirata = (fichaSalva) => {
+        if (typeof dadosTemporariosForm !== 'undefined') {
+            dadosTemporariosForm = {
+                nome: fichaSalva.nome,
+                raca: fichaSalva.raca,
+                classe: fichaSalva.classe,
+                tipoStatus: 'auto'
+            };
+        }
+        
+        if (typeof atributosRolados !== 'undefined') {
+            atributosRolados = fichaSalva.atributos || {};
+        }
+
+        window.personagemAtualPirata = {
+            nome: fichaSalva.nome,
+            raca: fichaSalva.raca,
+            classe: fichaSalva.classe,
+            atributos: fichaSalva.atributos
+        };
+
+        const telaFormulario = document.getElementById('telaFormulario') || document.querySelector('.formulario-container');
+        const containerResultado = document.getElementById('containerResultado') || document.getElementById('rolagem');
+        
+        if (telaFormulario) telaFormulario.classList.add('hidden');
+        if (containerResultado) containerResultado.classList.remove('hidden');
+
+        if (typeof renderizarFichaPirata === 'function') {
+            renderizarFichaPirata(window.personagemAtualPirata);
+        }
+    };
+
     const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
     if (fichaSalvaStr) {
         try {
             const fichaSalva = JSON.parse(fichaSalvaStr);
             if (fichaSalva.sistema === 'Pirata') {
                 localStorage.removeItem('fichaSelecionada');
-                
-                if (typeof dadosTemporariosForm !== 'undefined') {
-                    dadosTemporariosForm = {
-                        nome: fichaSalva.nome,
-                        raca: fichaSalva.raca,
-                        classe: fichaSalva.classe,
-                        tipoStatus: 'auto'
-                    };
-                }
-                
-                if (typeof atributosRolados !== 'undefined') {
-                    atributosRolados = fichaSalva.atributos || {};
-                }
-
-                window.personagemAtualPirata = {
-                    nome: fichaSalva.nome,
-                    raca: fichaSalva.raca,
-                    classe: fichaSalva.classe,
-                    atributos: fichaSalva.atributos
-                };
-
-                const telaFormulario = document.getElementById('telaFormulario') || document.querySelector('.formulario-container');
-                const containerResultado = document.getElementById('containerResultado') || document.getElementById('rolagem');
-                
-                if (telaFormulario) telaFormulario.classList.add('hidden');
-                if (containerResultado) containerResultado.classList.remove('hidden');
-
-                if (typeof renderizarFichaPirata === 'function') {
-                    renderizarFichaPirata(window.personagemAtualPirata);
-                }
+                forcarExibicaoPirata(fichaSalva);
+                setTimeout(() => {
+                    forcarExibicaoPirata(fichaSalva);
+                }, 100);
             }
         } catch (e) {
             console.error("Erro ao carregar ficha salva:", e);
@@ -887,7 +893,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = {
         atributosPirata, rolarD6, rolarD12, rolarD20, calcularModificadorPirata,
