@@ -382,6 +382,10 @@ if (btnPNGMedieval && btnPNGMedieval.addEventListener) {
     });
 }
 
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Tratamento isolado para a ficha salva (Medieval)
     const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
     if (fichaSalvaStr) {
         try {
@@ -401,17 +405,12 @@ if (btnPNGMedieval && btnPNGMedieval.addEventListener) {
                     classe: fichaSalva.classe,
                     atributos: fichaSalva.atributos
                 });
-                return;
             }
         } catch (e) {
             localStorage.removeItem('fichaSelecionada');
         }
     }
-
-    const telaFormulario = document.getElementById("telaFormulario");
-    if (telaFormulario) {
-        telaFormulario.classList.remove("hidden");
-    }
+    
         const containerResultado = document.getElementById('containerResultado');
         if (containerResultado && !document.getElementById('btnConcluirFichaServer')) {
             const btnConcluir = document.createElement('button');
@@ -465,7 +464,7 @@ if (btnPNGMedieval && btnPNGMedieval.addEventListener) {
                 }
             });
         }
-
+    });
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = {
