@@ -779,32 +779,33 @@ document.addEventListener('DOMContentLoaded', () => {
             const fichaSalva = JSON.parse(fichaSalvaStr);
             if (fichaSalva.sistema === 'Pirata') {
                 localStorage.removeItem('fichaSelecionada');
-                dadosTemporariosForm = {
-                    nome: fichaSalva.nome,
-                    raca: fichaSalva.raca,
-                    classe: fichaSalva.classe,
-                    tipoStatus: 'auto'
-                };
-                atributosRolados = fichaSalva.atributos || {};
-                personagemAtualPirata = {
-                    nome: fichaSalva.nome,
-                    raca: fichaSalva.raca,
-                    classe: fichaSalva.classe,
-                    atributos: fichaSalva.atributos
-                };
-
+                if (typeof dadosTemporariosForm !== 'undefined') {
+                    dadosTemporariosForm = {
+                        nome: fichaSalva.nome,
+                        raca: fichaSalva.raca,
+                        classe: fichaSalva.classe,
+                        tipoStatus: 'auto'
+                    };
+                }
+                
+                if (typeof atributosRolados !== 'undefined') {
+                    atributosRolados = fichaSalva.atributos || {};
+                }
                 const telaFormulario = document.getElementById('telaFormulario') || document.querySelector('.formulario-container');
                 const containerResultado = document.getElementById('containerResultado') || document.getElementById('rolagem');
                 
                 if (telaFormulario) telaFormulario.style.display = 'none';
                 if (containerResultado) containerResultado.style.display = 'block';
-
-                renderizarFichaPirata(personagemAtualPirata);
+                if (typeof renderizarFichaPirata === 'function') {
+                    renderizarFichaPirata(fichaSalva);
+                }
             }
         } catch (e) {
+            console.error("Erro ao carregar ficha salva:", e);
             localStorage.removeItem('fichaSelecionada');
         }
     }
+
 });
 
 document.addEventListener('DOMContentLoaded', () => {
