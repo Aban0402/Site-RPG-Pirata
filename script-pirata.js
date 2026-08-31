@@ -772,7 +772,7 @@ if (tipoStatusPirata && tipoStatusPirata.addEventListener) {
 
 atualizarVisibilidadeStatusPirata();
 
-// Verifica se veio de Minhas Fichas (Pirata)
+document.addEventListener('DOMContentLoaded', () => {
     const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
     if (fichaSalvaStr) {
         try {
@@ -793,17 +793,12 @@ atualizarVisibilidadeStatusPirata();
                     atributos: fichaSalva.atributos
                 };
                 renderizarFichaPirata(personagemAtualPirata);
-                return;
             }
         } catch (e) {
             localStorage.removeItem('fichaSelecionada');
         }
     }
-
-    const telaFormulario = document.getElementById("telaFormulario");
-    if (telaFormulario) {
-        telaFormulario.classList.remove("hidden");
-    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const btnLogin = document.getElementById('menuLogin') || document.getElementById('btnLogin');
