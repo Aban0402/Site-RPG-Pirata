@@ -792,6 +792,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     classe: fichaSalva.classe,
                     atributos: fichaSalva.atributos
                 };
+
+                const telaFormulario = document.getElementById('telaFormulario') || document.querySelector('.formulario-container');
+                const containerResultado = document.getElementById('containerResultado') || document.getElementById('rolagem');
+                
+                if (telaFormulario) telaFormulario.style.display = 'none';
+                if (containerResultado) containerResultado.style.display = 'block';
+
                 renderizarFichaPirata(personagemAtualPirata);
             }
         } catch (e) {
