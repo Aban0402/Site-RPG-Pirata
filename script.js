@@ -389,29 +389,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fichaSalvaStr) {
         try {
             const fichaSalva = JSON.parse(fichaSalvaStr);
-            if (fichaSalva.sistema === 'Medieval') {
+            if (fichaSalva.sistema === 'Medieval' || !fichaSalva.sistema) {
                 localStorage.removeItem('fichaSelecionada');
-                dadosTemporariosForm = {
-                    nome: fichaSalva.nome,
-                    raca: fichaSalva.raca,
-                    classe: fichaSalva.classe,
-                    tipoDado: 'd20'
-                };
-                atributosRolados = fichaSalva.atributos || {};
                 const telaFormulario = document.getElementById('telaFormulario') || document.querySelector('.formulario-container');
                 const containerResultado = document.getElementById('containerResultado') || document.getElementById('rolagem');
                 
                 if (telaFormulario) telaFormulario.style.display = 'none';
                 if (containerResultado) containerResultado.style.display = 'block';
 
-                renderizarFicha({
-                    nome: fichaSalva.nome,
-                    raca: fichaSalva.raca,
-                    classe: fichaSalva.classe,
-                    atributos: fichaSalva.atributos
-                });
+                if (typeof renderizarFicha === 'function') {
+                    renderizarFicha(fichaSalva);
+                }
             }
         } catch (e) {
+            console.error("Erro ao carregar ficha medieval:", e);
             localStorage.removeItem('fichaSelecionada');
         }
     }
