@@ -385,72 +385,53 @@ if (btnPNGMedieval && btnPNGMedieval.addEventListener) {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+    const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
+
+    if (fichaSalvaStr) {
+        try {
+            const fichaSalva = JSON.parse(fichaSalvaStr);
+            localStorage.removeItem('fichaSelecionada');
+
+            if (fichaSalva.sistema === 'Medieval' || !fichaSalva.sistema) {
+                const atributosBrutos = fichaSalva.atributos || {};
+                const atributosNormalizados = {
+                    forca: atributosBrutos.forca || atributosBrutos.Força || 10,
+                    destreza: atributosBrutos.destreza || atributosBrutos.Destreza || 10,
+                    constituicao: atributosBrutos.constituicao || atributosBrutos.Constituição || 10,
+                    inteligencia: atributosBrutos.inteligencia || atributosBrutos.Inteligência || 10,
+                    sabedoria: atributosBrutos.sabedoria || atributosBrutos.Sabedoria || 10,
+                    carisma: atributosBrutos.carisma || atributosBrutos.Carisma || 10
+                };
+                
+                dadosTemporariosForm = {
+                    nome: fichaSalva.nome,
+                    raca: fichaSalva.raca,
+                    classe: fichaSalva.classe,
+                    tipoDado: 'd20'
+                };
+                
+                atributosRolados = atributosNormalizados;
+                
+                if (typeof renderizarFicha === 'function') {
+                    renderizarFicha({
+                        nome: fichaSalva.nome,
+                        raca: fichaSalva.raca,
+                        classe: fichaSalva.classe,
+                        atributos: atributosNormalizados
+                    });
+                }
+                return; 
+            }
+        } catch (e) {
+            console.error("Erro ao carregar ficha salva:", e);
+        }
+    }
+
     const telaFormulario = document.getElementById("telaFormulario");
     if (telaFormulario) {
         telaFormulario.classList.remove("hidden");
     }
-if (fichaSalvaStr) {
-    try {
-        const fichaSalva = JSON.parse(fichaSalvaStr);
-        localStorage.removeItem('fichaSelecionada');
-        
-        if (fichaSalva.sistema === 'Pirata') {
-            const atributosBrutos = fichaSalva.atributos || {};
-            const atributosPirataNormalizados = {
-                forca: atributosBrutos.forca || 7,
-                destreza: atributosBrutos.destreza || 7,
-                constituicao: atributosBrutos.constituicao || 7,
-                sorte: atributosBrutos.sorte || 7,
-                carisma: atributosBrutos.carisma || 7
-            };
-
-            atributosRolados = atributosPirataNormalizados;
-            personagemAtualPirata = {
-                nome: fichaSalva.nome,
-                raca: fichaSalva.raca,
-                classe: fichaSalva.classe,
-                atributos: atributosPirataNormalizados
-            };
-
-            if (typeof renderizarFichaPirata === 'function') {
-                renderizarFichaPirata(personagemAtualPirata);
-            }
-            return;
-        }
-
-        const atributosBrutos = fichaSalva.atributos || {};
-        const atributosNormalizados = {
-            forca: atributosBrutos.forca || atributosBrutos.Força || 10,
-            destreza: atributosBrutos.destreza || atributosBrutos.Destreza || 10,
-            constituicao: atributosBrutos.constituicao || atributosBrutos.Constituição || 10,
-            inteligencia: atributosBrutos.inteligencia || atributosBrutos.Inteligência || 10,
-            sabedoria: atributosBrutos.sabedoria || atributosBrutos.Sabedoria || 10,
-            carisma: atributosBrutos.carisma || atributosBrutos.Carisma || 10
-        };
-        
-        dadosTemporariosForm = {
-            nome: fichaSalva.nome,
-            raca: fichaSalva.raca,
-            classe: fichaSalva.classe,
-            tipoDado: 'd20'
-        };
-        
-        atributosRolados = atributosNormalizados;
-        
-        if (typeof renderizarFicha === 'function') {
-            renderizarFicha({
-                nome: fichaSalva.nome,
-                raca: fichaSalva.raca,
-                classe: fichaSalva.classe,
-                atributos: atributosNormalizados
-            });
-        }
-        
-    } catch (e) {
-        console.error("Erro ao carregar ficha salva:", e);
-    }
-}
-
+});
         const containerResultado = document.getElementById('containerResultado');
         if (containerResultado && !document.getElementById('btnConcluirFichaServer')) {
             const btnConcluir = document.createElement('button');
@@ -504,7 +485,7 @@ if (fichaSalvaStr) {
                 }
             });
         }
-    });
+
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = {
