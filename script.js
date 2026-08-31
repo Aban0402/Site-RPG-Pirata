@@ -382,48 +382,29 @@ if (btnPNGMedieval && btnPNGMedieval.addEventListener) {
     });
 }
 
-
-
-document.addEventListener("DOMContentLoaded", () => {
     const fichaSalvaStr = localStorage.getItem('fichaSelecionada');
-
     if (fichaSalvaStr) {
         try {
             const fichaSalva = JSON.parse(fichaSalvaStr);
-            localStorage.removeItem('fichaSelecionada');
-
-            if (fichaSalva.sistema === 'Medieval' || !fichaSalva.sistema) {
-                const atributosBrutos = fichaSalva.atributos || {};
-                const atributosNormalizados = {
-                    forca: atributosBrutos.forca || atributosBrutos.Força || 10,
-                    destreza: atributosBrutos.destreza || atributosBrutos.Destreza || 10,
-                    constituicao: atributosBrutos.constituicao || atributosBrutos.Constituição || 10,
-                    inteligencia: atributosBrutos.inteligencia || atributosBrutos.Inteligência || 10,
-                    sabedoria: atributosBrutos.sabedoria || atributosBrutos.Sabedoria || 10,
-                    carisma: atributosBrutos.carisma || atributosBrutos.Carisma || 10
-                };
-                
+            if (fichaSalva.sistema === 'Medieval') {
+                localStorage.removeItem('fichaSelecionada');
                 dadosTemporariosForm = {
                     nome: fichaSalva.nome,
                     raca: fichaSalva.raca,
                     classe: fichaSalva.classe,
                     tipoDado: 'd20'
                 };
-                
-                atributosRolados = atributosNormalizados;
-                
-                if (typeof renderizarFicha === 'function') {
-                    renderizarFicha({
-                        nome: fichaSalva.nome,
-                        raca: fichaSalva.raca,
-                        classe: fichaSalva.classe,
-                        atributos: atributosNormalizados
-                    });
-                }
-                return; 
+                atributosRolados = fichaSalva.atributos || {};
+                renderizarFicha({
+                    nome: fichaSalva.nome,
+                    raca: fichaSalva.raca,
+                    classe: fichaSalva.classe,
+                    atributos: fichaSalva.atributos
+                });
+                return;
             }
         } catch (e) {
-            console.error("Erro ao carregar ficha salva:", e);
+            localStorage.removeItem('fichaSelecionada');
         }
     }
 
@@ -431,7 +412,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (telaFormulario) {
         telaFormulario.classList.remove("hidden");
     }
-});
         const containerResultado = document.getElementById('containerResultado');
         if (containerResultado && !document.getElementById('btnConcluirFichaServer')) {
             const btnConcluir = document.createElement('button');
